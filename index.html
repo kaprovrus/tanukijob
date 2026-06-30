@@ -683,16 +683,21 @@
                     }
                 };
 
-                const response = await fetch(SCRIPT_URL, {
-    method: 'POST',
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
+                const formData = new FormData();
+
+formData.append("action", "apply");
+formData.append("vacancy", JSON.stringify(currentVacancy));
+formData.append("candidate", JSON.stringify({
+    name: name,
+    phone: phone
+}));
+
+const response = await fetch(SCRIPT_URL,{
+    method:"POST",
+    body:formData
 });
 
 const result = await response.json();
-console.log(result);
 
                 // При no-cors мы не можем прочитать ответ, но запрос уходит.
                 // Показываем успех, так как ошибки обрабатываются на сервере.
