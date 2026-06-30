@@ -721,7 +721,10 @@
             document.getElementById('vacancies-container').innerHTML =
                 `<div class="error-message">${message}</div>`;
         }
-
+         function showSuccess() {
+             formContainer.style.display = "none";
+              successMessage.classList.add("show");
+        }
         // ============================================================
         //  ОБРАБОТЧИКИ СОБЫТИЙ
         // ============================================================
