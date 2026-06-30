@@ -5,23 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TANUKIFAMILY - Вакансии</title>
     <style>
-        /* ----- Основные стили (как в исходнике) ----- */
         :root {
             --tanuki-red: #e74c3c;
             --bella-orange: #e67e22;
             --kaspi-blue: #3498db;
-            --bg-image: url('112.png');
             --card-width: 280px;
             --card-padding: 25px;
         }
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: var(--bg-image) no-repeat center center fixed;
+            background: url('112.png') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             position: relative;
@@ -30,10 +26,7 @@
         body::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(255, 255, 255, 0.88);
             z-index: -1;
         }
@@ -42,22 +35,10 @@
             padding: 30px 0;
             text-align: center;
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .logo {
-            font-size: 2.8rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-        .slogan {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
+        .logo { font-size: 2.8rem; font-weight: bold; text-transform: uppercase; }
+        .slogan { font-size: 1.2rem; opacity: 0.9; margin-top: 10px; }
         .filters {
             display: flex;
             justify-content: center;
@@ -71,20 +52,14 @@
             padding: 12px 25px;
             border-radius: 30px;
             border: none;
-            background-color: white;
+            background: white;
             min-width: 220px;
             font-size: 1rem;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: all 0.3s ease;
         }
         .filter-select:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             transform: translateY(-2px);
         }
         .cards-container {
@@ -99,118 +74,55 @@
         .card {
             width: var(--card-width);
             min-height: 280px;
-            background-color: var(--tanuki-red);
+            background: var(--tanuki-red);
             border-radius: 12px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             align-items: center;
             text-align: center;
             color: white;
             padding: var(--card-padding);
-            box-sizing: border-box;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-            z-index: 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .card:hover {
             transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-            z-index: 2;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
         }
         .card-content {
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
-            position: relative;
-            z-index: 1;
         }
-        .bella-chao {
-            background-color: var(--bella-orange);
-        }
-        .kaspiyka {
-            background-color: var(--kaspi-blue);
-        }
-        .position {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            line-height: 1.3;
-        }
-        .description {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            flex-grow: 1;
-            display: -webkit-box;
-            -webkit-line-clamp: 6;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .salary {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #fff8e1;
-            padding: 6px 0;
-        }
-        .city {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            font-style: italic;
-            opacity: 0.9;
-        }
+        .bella-chao { background-color: var(--bella-orange); }
+        .kaspiyka { background-color: var(--kaspi-blue); }
+        .position { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; }
+        .description { font-size: 1.05rem; line-height: 1.6; flex-grow: 1; margin-bottom: 15px; }
+        .salary { font-size: 1.2rem; font-weight: 600; color: #fff8e1; margin-bottom: 10px; }
+        .city { font-size: 1.1rem; font-style: italic; opacity: 0.9; margin-bottom: 10px; }
         .restaurant-name {
-            font-size: 1.1rem;
             padding: 8px 15px;
-            background-color: rgba(0, 0, 0, 0.25);
+            background: rgba(0,0,0,0.25);
             border-radius: 20px;
-            align-self: center;
             margin-top: auto;
-            transition: all 0.3s ease;
         }
-        .card:hover .restaurant-name {
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-        .loading,
-        .error-message,
-        .no-vacancies {
+        .loading, .error-message, .no-vacancies {
             text-align: center;
             padding: 60px;
             font-size: 1.2rem;
             width: 100%;
         }
-        .loading {
-            color: #666;
-        }
-        .error-message {
-            color: #d9534f;
-        }
-        .no-vacancies {
-            color: #555;
-        }
+        .loading { color: #666; }
+        .error-message { color: #d9534f; }
+        .no-vacancies { color: #555; }
 
-        /* ----- Стили для модального окна (анкета) ----- */
+        /* Модальное окно */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
             display: none;
             align-items: center;
             justify-content: center;
@@ -218,28 +130,20 @@
             padding: 20px;
             backdrop-filter: blur(4px);
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
         .modal {
             background: white;
             border-radius: 20px;
             max-width: 500px;
             width: 100%;
             padding: 35px 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: modalFade 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             position: relative;
+            animation: modalFade 0.3s ease;
         }
         @keyframes modalFade {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
         .modal h2 {
             margin-top: 0;
@@ -258,15 +162,12 @@
             color: #555;
             border-left: 4px solid var(--tanuki-red);
         }
-        .modal .vacancy-summary strong {
-            color: #222;
-        }
+        .modal .vacancy-summary strong { color: #222; }
         .modal label {
             display: block;
             font-weight: 600;
             margin-bottom: 6px;
             color: #444;
-            font-size: 0.95rem;
         }
         .modal input {
             width: 100%;
@@ -275,19 +176,10 @@
             border: 2px solid #ddd;
             border-radius: 12px;
             font-size: 1rem;
-            transition: border 0.2s;
             outline: none;
+            transition: border 0.2s;
         }
-        .modal input:focus {
-            border-color: var(--tanuki-red);
-        }
-        .modal .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        .modal .form-row .form-group {
-            flex: 1;
-        }
+        .modal input:focus { border-color: var(--tanuki-red); }
         .modal .btn-group {
             display: flex;
             gap: 15px;
@@ -307,22 +199,13 @@
             background: var(--tanuki-red);
             color: white;
         }
-        .modal .btn-primary:hover {
-            background: #c0392b;
-            transform: scale(1.02);
-        }
-        .modal .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .modal .btn-primary:hover { background: #c0392b; }
+        .modal .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         .modal .btn-secondary {
             background: #eee;
             color: #444;
         }
-        .modal .btn-secondary:hover {
-            background: #ddd;
-        }
+        .modal .btn-secondary:hover { background: #ddd; }
         .modal .form-error {
             color: #d9534f;
             font-size: 0.9rem;
@@ -330,28 +213,15 @@
             margin-bottom: 12px;
             display: none;
         }
-        .modal .form-error.show {
-            display: block;
-        }
+        .modal .form-error.show { display: block; }
         .modal .success-message {
             text-align: center;
             padding: 20px 0;
             display: none;
         }
-        .modal .success-message.show {
-            display: block;
-        }
-        .modal .success-message .icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-        .modal .success-message h3 {
-            color: #27ae60;
-            margin-bottom: 8px;
-        }
-        .modal .success-message p {
-            color: #555;
-        }
+        .modal .success-message.show { display: block; }
+        .modal .success-message .icon { font-size: 4rem; margin-bottom: 10px; }
+        .modal .success-message h3 { color: #27ae60; }
         .modal .close-btn {
             position: absolute;
             top: 15px;
@@ -361,43 +231,26 @@
             color: #aaa;
             background: none;
             border: none;
-            transition: color 0.2s;
         }
-        .modal .close-btn:hover {
-            color: #333;
-        }
+        .modal .close-btn:hover { color: #333; }
 
         @media (max-width: 768px) {
-            .modal .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            .modal .btn-group {
-                flex-direction: column;
-            }
-            .modal .btn {
-                width: 100%;
-            }
+            .modal .btn-group { flex-direction: column; }
+            .modal .btn { width: 100%; }
         }
         @media (max-width: 480px) {
-            .modal {
-                padding: 25px 20px;
-            }
-            .modal h2 {
-                font-size: 1.5rem;
-            }
+            .modal { padding: 25px 20px; }
+            .modal h2 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Шапка -->
     <div class="header">
         <div class="logo">TANUKIFAMILY</div>
         <div class="slogan">Мы набираем команду профессионалов!</div>
     </div>
 
-    <!-- Фильтры -->
     <div class="filters">
         <select id="city-filter" class="filter-select" onchange="filterVacancies()">
             <option value="">Все города</option>
@@ -410,24 +263,19 @@
         </select>
     </div>
 
-    <!-- Карточки вакансий -->
     <div class="cards-container" id="vacancies-container">
         <div class="loading">Загрузка вакансий...</div>
     </div>
 
-    <!-- Модальное окно анкеты -->
+    <!-- Модальное окно -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <button class="close-btn" id="modalCloseBtn">&times;</button>
             <h2>📋 Отклик на вакансию</h2>
-
-            <!-- Блок с информацией о вакансии -->
             <div class="vacancy-summary" id="vacancySummary">
                 <strong id="modalPosition">Должность</strong><br />
                 <span id="modalRestaurant">Ресторан</span> · <span id="modalCity">Город</span>
             </div>
-
-            <!-- Форма -->
             <div id="formContainer">
                 <div class="form-group">
                     <label for="candidateName">ФИО *</label>
@@ -443,8 +291,6 @@
                     <button class="btn btn-primary" id="modalSubmitBtn">Откликнуться</button>
                 </div>
             </div>
-
-            <!-- Блок успеха -->
             <div class="success-message" id="successMessage">
                 <div class="icon">✅</div>
                 <h3>Заявка отправлена!</h3>
@@ -455,172 +301,105 @@
     </div>
 
     <script>
-        // ============================================================
-        //  КОНФИГУРАЦИЯ
-        // ============================================================
-
-        // URL вашего Google Apps Script (замените на свой)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKKPNl6GIK87QOCnorkuMs0KPfCxrl3y21bg3tTbs25XojvpRTy5xIfmoakKUnyuYR/exec';
 
-        // ============================================================
-        //  ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-        // ============================================================
-
         let allVacancies = [];
-        let filteredVacancies = [];
-        let recruiters = {};
+        let currentVacancy = null;
         let cities = new Set();
 
-        // Текущая вакансия для отклика
-        let currentVacancy = null;
-
-        // DOM-элементы модалки
         const modalOverlay = document.getElementById('modalOverlay');
         const modalCloseBtn = document.getElementById('modalCloseBtn');
         const modalCancelBtn = document.getElementById('modalCancelBtn');
         const modalSubmitBtn = document.getElementById('modalSubmitBtn');
         const successCloseBtn = document.getElementById('successCloseBtn');
-
         const candidateName = document.getElementById('candidateName');
         const candidatePhone = document.getElementById('candidatePhone');
         const formError = document.getElementById('formError');
         const formContainer = document.getElementById('formContainer');
         const successMessage = document.getElementById('successMessage');
-
         const modalPosition = document.getElementById('modalPosition');
         const modalRestaurant = document.getElementById('modalRestaurant');
         const modalCity = document.getElementById('modalCity');
 
-        // ============================================================
-        //  ЗАГРУЗКА ДАННЫХ
-        // ============================================================
-
+        // Загрузка данных
         async function loadData() {
             try {
-                showLoading();
-
-                const [recruitersResponse, vacanciesResponse] = await Promise.all([
+                const [recruitersRes, vacanciesRes] = await Promise.all([
                     fetch(`${SCRIPT_URL}?type=recruiters`),
                     fetch(`${SCRIPT_URL}?type=vacancies`)
                 ]);
+                const recruitersData = await recruitersRes.json();
+                const vacanciesData = await vacanciesRes.json();
 
-                const [recruitersData, vacanciesData] = await Promise.all([
-                    recruitersResponse.json(),
-                    vacanciesResponse.json()
-                ]);
-
-                if (recruitersData.status === 'success' && vacanciesData.status === 'success') {
-                    processRecruiters(recruitersData.recruiters);
-                    processVacancies(vacanciesData.vacancies);
+                if (vacanciesData.status === 'success') {
+                    allVacancies = vacanciesData.vacancies.filter(v => v.restaurant && v.position);
+                    cities = new Set(allVacancies.map(v => v.city).filter(c => c));
+                    updateCityFilter();
                     filterVacancies();
                 } else {
-                    throw new Error('Ошибка формата данных');
+                    throw new Error('Ошибка загрузки данных');
                 }
             } catch (error) {
-                console.error('Ошибка загрузки:', error);
-                showError('Ошибка загрузки данных. Пожалуйста, обновите страницу.');
+                console.error(error);
+                document.getElementById('vacancies-container').innerHTML = 
+                    '<div class="error-message">Ошибка загрузки данных. Обновите страницу.</div>';
             }
         }
 
-        function processRecruiters(recruitersData) {
-            recruiters = recruitersData.reduce((acc, recruiter) => {
-                if (recruiter.city && recruiter.phone) {
-                    acc[recruiter.city] = {
-                        name: recruiter.name || '',
-                        phone: formatPhone(recruiter.phone),
-                        email: recruiter.email || ''
-                    };
-                }
-                return acc;
-            }, {});
-        }
-
-        function processVacancies(vacanciesData) {
-            allVacancies = vacanciesData.filter(v => v.restaurant && v.position);
-            cities = new Set(allVacancies.map(v => v.city).filter(city => city));
-            updateCityFilter();
-        }
-
         function updateCityFilter() {
-            const citySelect = document.getElementById('city-filter');
-            const currentCity = citySelect.value;
-
-            citySelect.innerHTML = '<option value="">Все города</option>';
+            const select = document.getElementById('city-filter');
+            const current = select.value;
+            select.innerHTML = '<option value="">Все города</option>';
             Array.from(cities).sort().forEach(city => {
                 const option = document.createElement('option');
                 option.value = city;
                 option.textContent = city;
-                citySelect.appendChild(option);
+                select.appendChild(option);
             });
-
-            if (currentCity && cities.has(currentCity)) {
-                citySelect.value = currentCity;
-            }
+            if (current && cities.has(current)) select.value = current;
         }
-
-        // ============================================================
-        //  ФИЛЬТРАЦИЯ И ОТРИСОВКА
-        // ============================================================
 
         function filterVacancies() {
             const city = document.getElementById('city-filter').value;
             const restaurant = document.getElementById('restaurant-filter').value;
-
-            filteredVacancies = allVacancies.filter(v => {
-                return (!city || v.city === city) &&
-                    (!restaurant || v.restaurant === restaurant);
-            });
-
-            renderVacancies();
+            const filtered = allVacancies.filter(v => 
+                (!city || v.city === city) && (!restaurant || v.restaurant === restaurant)
+            );
+            renderVacancies(filtered);
         }
 
-        function renderVacancies() {
+        function renderVacancies(vacancies) {
             const container = document.getElementById('vacancies-container');
-
-            if (filteredVacancies.length === 0) {
+            if (!vacancies.length) {
                 container.innerHTML = '<div class="no-vacancies">Нет вакансий по выбранным критериям</div>';
                 return;
             }
-
             container.innerHTML = '';
-
-            filteredVacancies.forEach(vacancy => {
+            vacancies.forEach(v => {
                 const card = document.createElement('div');
                 card.className = 'card';
-
-                if (vacancy.restaurant === "Белла Чао") {
-                    card.classList.add('bella-chao');
-                } else if (vacancy.restaurant === "Каспийка") {
-                    card.classList.add('kaspiyka');
-                }
-
+                if (v.restaurant === "Белла Чао") card.classList.add('bella-chao');
+                if (v.restaurant === "Каспийка") card.classList.add('kaspiyka');
                 card.innerHTML = `
                     <div class="card-content">
-                        <div class="position">${vacancy.position}</div>
-                        <div class="description">${vacancy.description || ''}</div>
-                        <div class="salary">${vacancy.salary || ''}</div>
-                        <div class="city">${vacancy.city || ''}</div>
-                        <div class="restaurant-name">${vacancy.restaurant}</div>
+                        <div class="position">${v.position}</div>
+                        <div class="description">${v.description || ''}</div>
+                        <div class="salary">${v.salary || ''}</div>
+                        <div class="city">${v.city || ''}</div>
+                        <div class="restaurant-name">${v.restaurant}</div>
                     </div>
                 `;
-
-                card.addEventListener('click', () => openModal(vacancy));
+                card.addEventListener('click', () => openModal(v));
                 container.appendChild(card);
             });
         }
 
-        // ============================================================
-        //  МОДАЛЬНОЕ ОКНО (анкета)
-        // ============================================================
-
+        // Модальное окно
         function openModal(vacancy) {
             currentVacancy = vacancy;
-            // Заполняем информацию о вакансии
             modalPosition.textContent = vacancy.position;
             modalRestaurant.textContent = vacancy.restaurant;
             modalCity.textContent = vacancy.city || 'Город не указан';
-
-            // Сбрасываем форму
             formContainer.style.display = 'block';
             successMessage.classList.remove('show');
             formError.classList.remove('show');
@@ -628,7 +407,6 @@
             candidatePhone.value = '';
             modalSubmitBtn.disabled = false;
             modalSubmitBtn.textContent = 'Откликнуться';
-
             modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             candidateName.focus();
@@ -640,132 +418,68 @@
             currentVacancy = null;
         }
 
-        // ============================================================
-        //  ОТПРАВКА ЗАЯВКИ
-        // ============================================================
-
+        // Отправка заявки
         async function submitApplication() {
-    const name = candidateName.value.trim();
-    const phone = candidatePhone.value.trim();
+            const name = candidateName.value.trim();
+            const phone = candidatePhone.value.trim();
 
-    if (!name || !phone) {
-        formError.textContent = 'Пожалуйста, заполните все поля';
-        formError.classList.add('show');
-        return;
-    }
+            if (!name || !phone) {
+                formError.textContent = 'Заполните все поля';
+                formError.classList.add('show');
+                return;
+            }
+            if (name.length < 5) {
+                formError.textContent = 'Введите полное ФИО';
+                formError.classList.add('show');
+                return;
+            }
+            if (phone.replace(/\D/g, '').length < 10) {
+                formError.textContent = 'Введите корректный номер телефона';
+                formError.classList.add('show');
+                return;
+            }
 
-    if (name.length < 5) {
-        formError.textContent = 'Введите полное ФИО (минимум 5 символов)';
-        formError.classList.add('show');
-        return;
-    }
+            formError.classList.remove('show');
+            modalSubmitBtn.disabled = true;
+            modalSubmitBtn.textContent = 'Отправка...';
 
-    const phoneDigits = phone.replace(/\D/g, '');
-    if (phoneDigits.length < 10) {
-        formError.textContent = 'Введите корректный номер телефона (минимум 10 цифр)';
-        formError.classList.add('show');
-        return;
-    }
-
-    formError.classList.remove('show');
-    modalSubmitBtn.disabled = true;
-    modalSubmitBtn.textContent = 'Отправка...';
-
-    try {
-        const payload = {
-            action: "apply",
-            vacancy: currentVacancy,
-            candidate: { name: name, phone: phone }
-        };
-
-        // Отправляем в режиме no-cors. Данные гарантированно уйдут в Google Таблицу,
-        // но ответ прочитать мы не сможем (он будет opaque).
-        await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors", 
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        // Так как данные ушли без сетевых ошибок (catch не сработал), 
-        // мы считаем, что заявка принята.
-        showSuccess();
-
-    } catch (error) {
-        console.error('Ошибка сети/отправки:', error);
-        formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
-        formError.classList.add('show');
-        modalSubmitBtn.disabled = false;
-        modalSubmitBtn.textContent = 'Откликнуться';
-    }
-}
-        // ============================================================
-        //  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-        // ============================================================
-
-        function formatPhone(phone) {
-            const cleaned = phone.replace(/\D/g, '');
-            if (cleaned.startsWith('7')) return '+' + cleaned;
-            if (cleaned.startsWith('8')) return '+7' + cleaned.substring(1);
-            return '+' + cleaned;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        action: "apply",
+                        vacancy: currentVacancy,
+                        candidate: { name, phone }
+                    })
+                });
+                formContainer.style.display = 'none';
+                successMessage.classList.add('show');
+            } catch (error) {
+                console.error(error);
+                formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
+                formError.classList.add('show');
+                modalSubmitBtn.disabled = false;
+                modalSubmitBtn.textContent = 'Откликнуться';
+            }
         }
 
-        function showLoading() {
-            document.getElementById('vacancies-container').innerHTML =
-                '<div class="loading">Загрузка данных...</div>';
-        }
-
-        function showError(message) {
-            document.getElementById('vacancies-container').innerHTML =
-                `<div class="error-message">${message}</div>`;
-        }
-         function showSuccess() {
-             formContainer.style.display = "none";
-              successMessage.classList.add("show");
-        }
-        // ============================================================
-        //  ОБРАБОТЧИКИ СОБЫТИЙ
-        // ============================================================
-
-        // Закрытие модалки
+        // Обработчики событий
         modalCloseBtn.addEventListener('click', closeModal);
         modalCancelBtn.addEventListener('click', closeModal);
         successCloseBtn.addEventListener('click', closeModal);
-
-        // Клик по оверлею
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) closeModal();
-        });
-
-        // Кнопка "Откликнуться"
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
         modalSubmitBtn.addEventListener('click', submitApplication);
-
-        // Enter в полях
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
+        });
         candidateName.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                candidatePhone.focus();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); candidatePhone.focus(); }
         });
         candidatePhone.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                submitApplication();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); submitApplication(); }
         });
-
-        // Esc
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-                closeModal();
-            }
-        });
-
-        // ============================================================
-        //  ЗАПУСК
-        // ============================================================
 
         window.addEventListener('DOMContentLoaded', loadData);
     </script>
