@@ -683,19 +683,24 @@
                     }
                 };
 
-                const formData = new FormData();
-
-formData.append("action", "apply");
-formData.append("vacancy", JSON.stringify(currentVacancy));
-formData.append("candidate", JSON.stringify({
-    name: name,
-    phone: phone
-}));
+                const payload = {
+    action: "apply",
+    vacancy: currentVacancy,
+    candidate: {
+        name: name,
+        phone: phone
+    }
+};
 
 const response = await fetch(SCRIPT_URL,{
-    method:"POST",
-    body:formData
+    method: "POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body: JSON.stringify(payload)
 });
+
+const result = await response.json();
 
 const result = await response.json();
 
