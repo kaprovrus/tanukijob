@@ -674,23 +674,39 @@
             modalSubmitBtn.textContent = 'Отправка...';
 
             try {
-                const payload = {
-                    action: 'apply',
-                    vacancy: currentVacancy,
-                    candidate: {
-                        name: name,
-                        phone: phone
-                    }
-                };
 
-                const payload = {
-    action: "apply",
-    vacancy: currentVacancy,
-    candidate: {
-        name: name,
-        phone: phone
+    const payload = {
+        action: "apply",
+        vacancy: currentVacancy,
+        candidate: {
+            name: name,
+            phone: phone
+        }
+    };
+
+    const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+        showSuccess();
+    } else {
+        throw new Error(result.message || "Ошибка отправки");
     }
-};
+
+} catch (error) {
+    console.error(error);
+    formError.textContent = "Ошибка отправки. Попробуйте ещё раз.";
+    formError.classList.add("show");
+    modalSubmitBtn.disabled = false;
+    modalSubmitBtn.textContent = "Откликнуться";
+}
 
 const response = await fetch(SCRIPT_URL,{
     method: "POST",
