@@ -12,7 +12,9 @@
             --card-width: 280px;
             --card-padding: 25px;
         }
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -26,7 +28,10 @@
         body::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(255, 255, 255, 0.88);
             z-index: -1;
         }
@@ -35,10 +40,19 @@
             padding: 30px 0;
             text-align: center;
             color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        .logo { font-size: 2.8rem; font-weight: bold; text-transform: uppercase; }
-        .slogan { font-size: 1.2rem; opacity: 0.9; margin-top: 10px; }
+        .logo {
+            font-size: 2.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .slogan {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
         .filters {
             display: flex;
             justify-content: center;
@@ -55,11 +69,12 @@
             background: white;
             min-width: 220px;
             font-size: 1rem;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
             cursor: pointer;
+            transition: all 0.3s ease;
         }
         .filter-select:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
         }
         .cards-container {
@@ -84,11 +99,11 @@
             padding: var(--card-padding);
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .card:hover {
             transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
         }
         .card-content {
             width: 100%;
@@ -96,33 +111,75 @@
             display: flex;
             flex-direction: column;
         }
-        .bella-chao { background-color: var(--bella-orange); }
-        .kaspiyka { background-color: var(--kaspi-blue); }
-        .position { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; }
-        .description { font-size: 1.05rem; line-height: 1.6; flex-grow: 1; margin-bottom: 15px; }
-        .salary { font-size: 1.2rem; font-weight: 600; color: #fff8e1; margin-bottom: 10px; }
-        .city { font-size: 1.1rem; font-style: italic; opacity: 0.9; margin-bottom: 10px; }
+        .bella-chao {
+            background-color: var(--bella-orange);
+        }
+        .kaspiyka {
+            background-color: var(--kaspi-blue);
+        }
+        .position {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .description {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .salary {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff8e1;
+            margin-bottom: 10px;
+        }
+        .city {
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
         .restaurant-name {
             padding: 8px 15px;
-            background: rgba(0,0,0,0.25);
+            background: rgba(0, 0, 0, 0.25);
             border-radius: 20px;
             margin-top: auto;
+            transition: background 0.3s;
         }
-        .loading, .error-message, .no-vacancies {
+        .card:hover .restaurant-name {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .loading,
+        .error-message,
+        .no-vacancies {
             text-align: center;
             padding: 60px;
             font-size: 1.2rem;
             width: 100%;
         }
-        .loading { color: #666; }
-        .error-message { color: #d9534f; }
-        .no-vacancies { color: #555; }
+        .loading {
+            color: #666;
+        }
+        .error-message {
+            color: #d9534f;
+        }
+        .no-vacancies {
+            color: #555;
+        }
 
         /* Модальное окно */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
             display: none;
             align-items: center;
             justify-content: center;
@@ -130,20 +187,28 @@
             padding: 20px;
             backdrop-filter: blur(4px);
         }
-        .modal-overlay.active { display: flex; }
+        .modal-overlay.active {
+            display: flex;
+        }
         .modal {
             background: white;
             border-radius: 20px;
             max-width: 500px;
             width: 100%;
             padding: 35px 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             position: relative;
             animation: modalFade 0.3s ease;
         }
         @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.95) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         .modal h2 {
             margin-top: 0;
@@ -162,7 +227,9 @@
             color: #555;
             border-left: 4px solid var(--tanuki-red);
         }
-        .modal .vacancy-summary strong { color: #222; }
+        .modal .vacancy-summary strong {
+            color: #222;
+        }
         .modal label {
             display: block;
             font-weight: 600;
@@ -179,7 +246,9 @@
             outline: none;
             transition: border 0.2s;
         }
-        .modal input:focus { border-color: var(--tanuki-red); }
+        .modal input:focus {
+            border-color: var(--tanuki-red);
+        }
         .modal .btn-group {
             display: flex;
             gap: 15px;
@@ -199,13 +268,20 @@
             background: var(--tanuki-red);
             color: white;
         }
-        .modal .btn-primary:hover { background: #c0392b; }
-        .modal .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .modal .btn-primary:hover {
+            background: #c0392b;
+        }
+        .modal .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
         .modal .btn-secondary {
             background: #eee;
             color: #444;
         }
-        .modal .btn-secondary:hover { background: #ddd; }
+        .modal .btn-secondary:hover {
+            background: #ddd;
+        }
         .modal .form-error {
             color: #d9534f;
             font-size: 0.9rem;
@@ -213,15 +289,28 @@
             margin-bottom: 12px;
             display: none;
         }
-        .modal .form-error.show { display: block; }
+        .modal .form-error.show {
+            display: block;
+        }
         .modal .success-message {
             text-align: center;
             padding: 20px 0;
             display: none;
         }
-        .modal .success-message.show { display: block; }
-        .modal .success-message .icon { font-size: 4rem; margin-bottom: 10px; }
-        .modal .success-message h3 { color: #27ae60; }
+        .modal .success-message.show {
+            display: block;
+        }
+        .modal .success-message .icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+        .modal .success-message h3 {
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+        .modal .success-message p {
+            color: #555;
+        }
         .modal .close-btn {
             position: absolute;
             top: 15px;
@@ -231,16 +320,27 @@
             color: #aaa;
             background: none;
             border: none;
+            transition: color 0.2s;
         }
-        .modal .close-btn:hover { color: #333; }
+        .modal .close-btn:hover {
+            color: #333;
+        }
 
         @media (max-width: 768px) {
-            .modal .btn-group { flex-direction: column; }
-            .modal .btn { width: 100%; }
+            .modal .btn-group {
+                flex-direction: column;
+            }
+            .modal .btn {
+                width: 100%;
+            }
         }
         @media (max-width: 480px) {
-            .modal { padding: 25px 20px; }
-            .modal h2 { font-size: 1.5rem; }
+            .modal {
+                padding: 25px 20px;
+            }
+            .modal h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -304,7 +404,7 @@
         // ============================================================
         //  КОНФИГУРАЦИЯ
         // ============================================================
-        
+
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKKPNl6GIK87QOCnorkuMs0KPfCxrl3y21bg3tTbs25XojvpRTy5xIfmoakKUnyuYR/exec';
         const TELEGRAM_TOKEN = '8896299041:AAFOYA-kyjHGgYtmWVJSNosks3X_rKUh_J8';
         const TELEGRAM_CHAT_ID = '352662960';
@@ -339,22 +439,26 @@
         async function loadData() {
             try {
                 console.log('Загрузка данных...');
-                
+
                 const [recruitersRes, vacanciesRes] = await Promise.all([
                     fetch(`${SCRIPT_URL}?type=recruiters`),
                     fetch(`${SCRIPT_URL}?type=vacancies`)
                 ]);
-                
+
                 const recruitersData = await recruitersRes.json();
                 const vacanciesData = await vacanciesRes.json();
-                
+
                 console.log('Рекрутеры:', recruitersData);
                 console.log('Вакансии:', vacanciesData);
 
                 if (recruitersData.status === 'success') {
                     recruiters = recruitersData.recruiters.reduce((acc, r) => {
                         if (r.city) {
-                            acc[r.city] = { name: r.name || '', phone: r.phone || '', email: r.email || '' };
+                            acc[r.city] = {
+                                name: r.name || '',
+                                phone: r.phone || '',
+                                email: r.email || ''
+                            };
                         }
                         return acc;
                     }, {});
@@ -371,7 +475,7 @@
                 }
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
-                document.getElementById('vacancies-container').innerHTML = 
+                document.getElementById('vacancies-container').innerHTML =
                     '<div class="error-message">Ошибка загрузки данных. Обновите страницу.</div>';
             }
         }
@@ -392,7 +496,7 @@
         function filterVacancies() {
             const city = document.getElementById('city-filter').value;
             const restaurant = document.getElementById('restaurant-filter').value;
-            const filtered = allVacancies.filter(v => 
+            const filtered = allVacancies.filter(v =>
                 (!city || v.city === city) && (!restaurant || v.restaurant === restaurant)
             );
             renderVacancies(filtered);
@@ -470,15 +574,15 @@
                 });
                 const result = await response.json();
                 console.log('Telegram ответ:', result);
-                return result.ok ? '✅ Telegram отправлен' : '❌ Ошибка Telegram: ' + JSON.stringify(result);
+                return result.ok;
             } catch (error) {
                 console.error('Telegram error:', error);
-                return '❌ Ошибка Telegram: ' + error.message;
+                return false;
             }
         }
 
         // ============================================================
-        //  ОТПРАВКА ЗАЯВКИ (через no-cors)
+        //  ОТПРАВКА ЗАЯВКИ
         // ============================================================
 
         async function submitApplication() {
@@ -507,33 +611,32 @@
             modalSubmitBtn.textContent = 'Отправка...';
 
             try {
-                // Отправляем через no-cors (нельзя прочитать ответ, но запрос уходит)
+                // 1. Сохраняем в Google таблицу
                 const payload = {
                     action: "apply",
                     vacancy: currentVacancy,
                     candidate: { name, phone }
                 };
 
-                console.log('Отправка в Google таблицу (no-cors):', payload);
+                console.log('Отправка в Google таблицу...');
+                console.log('Данные:', payload);
 
-                await fetch(SCRIPT_URL, {
+                const response = await fetch(SCRIPT_URL, {
                     method: "POST",
-                    mode: "no-cors",
-                    headers: { 
-                        "Content-Type": "text/plain;charset=utf-8"
+                    headers: {
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify(payload)
                 });
 
-                // Так как no-cors не дает прочитать ответ, 
-                // считаем что запрос ушел успешно
-                console.log('Запрос отправлен (no-cors)');
+                const result = await response.json();
+                console.log('Ответ от Google:', result);
 
-                // Отправляем уведомления
-                const recruiter = recruiters[currentVacancy.city];
-                console.log('Рекрутер для города', currentVacancy.city, ':', recruiter);
-                
-                // Формируем сообщение для Telegram
+                if (result.status !== 'success') {
+                    throw new Error(result.message || 'Ошибка сохранения');
+                }
+
+                // 2. Отправляем в Telegram
                 const message = `
 📋 *НОВАЯ ЗАЯВКА НА ВАКАНСИЮ*
 
@@ -550,9 +653,32 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
 📅 Дата: ${new Date().toLocaleString('ru-RU')}
                 `.trim();
 
-                // Отправляем в Telegram
-                const tgResult = await sendTelegramNotification(message);
-                console.log('Telegram результат:', tgResult);
+                await sendTelegramNotification(message);
+
+                // 3. Открываем письмо
+                const recruiter = recruiters[currentVacancy.city];
+                const recruiterEmail = (recruiter && recruiter.email) ? recruiter.email : 'kaprov.rus@gmail.com';
+
+                const subject = encodeURIComponent(`Новый отклик: ${currentVacancy.position} (${currentVacancy.restaurant})`);
+                const body = encodeURIComponent(`
+Новый отклик на вакансию!
+
+Кандидат: ${name}
+Телефон: ${phone}
+
+Вакансия: ${currentVacancy.position}
+Ресторан: ${currentVacancy.restaurant}
+Город: ${currentVacancy.city || 'Не указан'}
+Зарплата: ${currentVacancy.salary || 'Не указана'}
+
+Дата: ${new Date().toLocaleString('ru-RU')}
+
+---
+Автоматическое уведомление TANUKIFAMILY
+                `);
+
+                // Открываем письмо в новой вкладке
+                window.open(`mailto:${recruiterEmail}?subject=${subject}&body=${body}`);
 
                 // Показываем успех
                 formContainer.style.display = 'none';
@@ -560,7 +686,7 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
 
             } catch (error) {
                 console.error('Ошибка:', error);
-                formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
+                formError.textContent = 'Ошибка: ' + error.message;
                 formError.classList.add('show');
                 modalSubmitBtn.disabled = false;
                 modalSubmitBtn.textContent = 'Откликнуться';
@@ -574,19 +700,27 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
         modalCloseBtn.addEventListener('click', closeModal);
         modalCancelBtn.addEventListener('click', closeModal);
         successCloseBtn.addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
         modalSubmitBtn.addEventListener('click', submitApplication);
-        
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
         });
-        
+
         candidateName.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); candidatePhone.focus(); }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                candidatePhone.focus();
+            }
         });
-        
+
         candidatePhone.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); submitApplication(); }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitApplication();
+            }
         });
 
         // ============================================================
