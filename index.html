@@ -582,7 +582,7 @@
         }
 
         // ============================================================
-        //  ОТПРАВКА ЗАЯВКИ
+        //  ОТПРАВКА ЗАЯВКИ (исправленная для CORS)
         // ============================================================
 
         async function submitApplication() {
@@ -611,32 +611,27 @@
             modalSubmitBtn.textContent = 'Отправка...';
 
             try {
-                // 1. Сохраняем в Google таблицу
                 const payload = {
                     action: "apply",
                     vacancy: currentVacancy,
                     candidate: { name, phone }
                 };
 
-                console.log('Отправка в Google таблицу...');
+                console.log('Отправка в Google таблицу (no-cors)...');
                 console.log('Данные:', payload);
 
-                const response = await fetch(SCRIPT_URL, {
+                // ===== ГЛАВНОЕ ИЗМЕНЕНИЕ - обход CORS =====
+                await fetch(SCRIPT_URL, {
                     method: "POST",
+                    mode: "no-cors", // <-- ОБХОД CORS
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "text/plain;charset=utf-8" // <-- ТОЛЬКО ТЕКСТ
                     },
                     body: JSON.stringify(payload)
                 });
+                // ============================================
 
-                const result = await response.json();
-                console.log('Ответ от Google:', result);
-
-                if (result.status !== 'success') {
-                    throw new Error(result.message || 'Ошибка сохранения');
-                }
-
-                // 2. Отправляем в Telegram
+                // Отправляем в Telegram
                 const message = `
 📋 *НОВАЯ ЗАЯВКА НА ВАКАНСИЮ*
 
@@ -655,7 +650,7 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
 
                 await sendTelegramNotification(message);
 
-                // 3. Открываем письмо
+                // Открываем письмо
                 const recruiter = recruiters[currentVacancy.city];
                 const recruiterEmail = (recruiter && recruiter.email) ? recruiter.email : 'kaprov.rus@gmail.com';
 
@@ -677,7 +672,6 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
 Автоматическое уведомление TANUKIFAMILY
                 `);
 
-                // Открываем письмо в новой вкладке
                 window.open(`mailto:${recruiterEmail}?subject=${subject}&body=${body}`);
 
                 // Показываем успех
@@ -686,7 +680,7 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
 
             } catch (error) {
                 console.error('Ошибка:', error);
-                formError.textContent = 'Ошибка: ' + error.message;
+                formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
                 formError.classList.add('show');
                 modalSubmitBtn.disabled = false;
                 modalSubmitBtn.textContent = 'Откликнуться';
