@@ -301,11 +301,24 @@
     </div>
 
     <script>
+        // ============================================================
+        //  КОНФИГУРАЦИЯ
+        // ============================================================
+        
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKKPNl6GIK87QOCnorkuMs0KPfCxrl3y21bg3tTbs25XojvpRTy5xIfmoakKUnyuYR/exec';
+        
+        // Токен для Telegram (можно спрятать в скрипте)
+        const TELEGRAM_TOKEN = '8896299041:AAFOYA-kyjHGgYtmWVJSNosks3X_rKUh_J8';
+        const TELEGRAM_CHAT_ID = '352662960';
+
+        // ============================================================
+        //  ПЕРЕМЕННЫЕ
+        // ============================================================
 
         let allVacancies = [];
         let currentVacancy = null;
         let cities = new Set();
+        let recruiters = {};
 
         const modalOverlay = document.getElementById('modalOverlay');
         const modalCloseBtn = document.getElementById('modalCloseBtn');
@@ -321,7 +334,10 @@
         const modalRestaurant = document.getElementById('modalRestaurant');
         const modalCity = document.getElementById('modalCity');
 
-        // Загрузка данных
+        // ============================================================
+        //  ЗАГРУЗКА ДАННЫХ
+        // ============================================================
+
         async function loadData() {
             try {
                 const [recruitersRes, vacanciesRes] = await Promise.all([
@@ -330,6 +346,15 @@
                 ]);
                 const recruitersData = await recruitersRes.json();
                 const vacanciesData = await vacanciesRes.json();
+
+                if (recruitersData.status === 'success') {
+                    recruiters = recruitersData.recruiters.reduce((acc, r) => {
+                        if (r.city && r.phone) {
+                            acc[r.city] = { name: r.name || '', phone: r.phone, email: r.email || '' };
+                        }
+                        return acc;
+                    }, {});
+                }
 
                 if (vacanciesData.status === 'success') {
                     allVacancies = vacanciesData.vacancies.filter(v => v.restaurant && v.position);
@@ -394,7 +419,10 @@
             });
         }
 
-        // Модальное окно
+        // ============================================================
+        //  МОДАЛЬНОЕ ОКНО
+        // ============================================================
+
         function openModal(vacancy) {
             currentVacancy = vacancy;
             modalPosition.textContent = vacancy.position;
@@ -418,23 +446,81 @@
             currentVacancy = null;
         }
 
-        // Отправка заявки
+        // ============================================================
+        //  ОТПРАВКА В ТЕЛЕГРАМ
+        // ============================================================
+
+        async function sendTelegramNotification(message) {
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+                const result = await response.json();
+                return result.ok ? '✅ Telegram отправлен' : '❌ Ошибка Telegram';
+            } catch (error) {
+                console.error('Telegram error:', error);
+                return '❌ Ошибка Telegram: ' + error.message;
+            }
+        }
+
+        // ============================================================
+        //  ОТПРАВКА НА ПОЧТУ (через API)
+        // ============================================================
+
+        // Используем EmailJS или другой сервис для отправки почты из браузера
+        // Или просто показываем уведомление
+
+        function sendEmailNotification(recruiterEmail, candidate, vacancy) {
+            // Если есть EmailJS - можно использовать
+            // Или используем mailto: ссылку
+            if (recruiterEmail) {
+                const subject = encodeURIComponent(`Новый отклик: ${vacancy.position}`);
+                const body = encodeURIComponent(`
+                    Новый отклик на вакансию!
+                    
+                    Кандидат: ${candidate.name}
+                    Телефон: ${candidate.phone}
+                    
+                    Вакансия: ${vacancy.position}
+                    Ресторан: ${vacancy.restaurant}
+                    Город: ${vacancy.city}
+                    
+                    Дата: ${new Date().toLocaleString('ru-RU')}
+                `);
+                window.open(`mailto:${recruiterEmail}?subject=${subject}&body=${body}`);
+                return '✅ Открыто письмо для отправки';
+            }
+            return '❌ Email рекрутера не найден';
+        }
+
+        // ============================================================
+        //  ОТПРАВКА ЗАЯВКИ
+        // ============================================================
+
         async function submitApplication() {
             const name = candidateName.value.trim();
             const phone = candidatePhone.value.trim();
 
+            // Валидация
             if (!name || !phone) {
                 formError.textContent = 'Заполните все поля';
                 formError.classList.add('show');
                 return;
             }
             if (name.length < 5) {
-                formError.textContent = 'Введите полное ФИО';
+                formError.textContent = 'Введите полное ФИО (минимум 5 символов)';
                 formError.classList.add('show');
                 return;
             }
             if (phone.replace(/\D/g, '').length < 10) {
-                formError.textContent = 'Введите корректный номер телефона';
+                formError.textContent = 'Введите корректный номер телефона (минимум 10 цифр)';
                 formError.classList.add('show');
                 return;
             }
@@ -444,7 +530,8 @@
             modalSubmitBtn.textContent = 'Отправка...';
 
             try {
-                await fetch(SCRIPT_URL, {
+                // 1. Сохраняем в Google таблицу
+                const response = await fetch(SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
                     headers: { "Content-Type": "application/json" },
@@ -454,10 +541,41 @@
                         candidate: { name, phone }
                     })
                 });
+
+                // 2. Отправляем уведомления
+                const recruiter = recruiters[currentVacancy.city];
+                
+                // Формируем сообщение для Telegram
+                const message = `
+📋 *НОВАЯ ЗАЯВКА НА ВАКАНСИЮ*
+
+👤 *Кандидат:* ${name}
+📱 *Телефон:* ${phone}
+
+📍 *Вакансия:*
+• Должность: ${currentVacancy.position}
+• Ресторан: ${currentVacancy.restaurant}
+• Город: ${currentVacancy.city}
+${currentVacancy.salary ? '• Зарплата: ' + currentVacancy.salary : ''}
+${currentVacancy.description ? '• Описание: ' + currentVacancy.description : ''}
+
+📅 Дата: ${new Date().toLocaleString('ru-RU')}
+                `.trim();
+
+                // Отправляем в Telegram
+                await sendTelegramNotification(message);
+
+                // Отправляем на почту (открываем mailto)
+                if (recruiter && recruiter.email) {
+                    sendEmailNotification(recruiter.email, { name, phone }, currentVacancy);
+                }
+
+                // Показываем успех
                 formContainer.style.display = 'none';
                 successMessage.classList.add('show');
+
             } catch (error) {
-                console.error(error);
+                console.error('Ошибка:', error);
                 formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
                 formError.classList.add('show');
                 modalSubmitBtn.disabled = false;
@@ -465,21 +583,31 @@
             }
         }
 
-        // Обработчики событий
+        // ============================================================
+        //  ОБРАБОТЧИКИ СОБЫТИЙ
+        // ============================================================
+
         modalCloseBtn.addEventListener('click', closeModal);
         modalCancelBtn.addEventListener('click', closeModal);
         successCloseBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
         modalSubmitBtn.addEventListener('click', submitApplication);
+        
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
         });
+        
         candidateName.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); candidatePhone.focus(); }
         });
+        
         candidatePhone.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); submitApplication(); }
         });
+
+        // ============================================================
+        //  ЗАПУСК
+        // ============================================================
 
         window.addEventListener('DOMContentLoaded', loadData);
     </script>
