@@ -305,10 +305,7 @@
         //  КОНФИГУРАЦИЯ
         // ============================================================
         
-        // URL вашего Google Apps Script
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKKPNl6GIK87QOCnorkuMs0KPfCxrl3y21bg3tTbs25XojvpRTy5xIfmoakKUnyuYR/exec';
-        
-        // Токен для Telegram
         const TELEGRAM_TOKEN = '8896299041:AAFOYA-kyjHGgYtmWVJSNosks3X_rKUh_J8';
         const TELEGRAM_CHAT_ID = '352662960';
 
@@ -473,7 +470,7 @@
                 });
                 const result = await response.json();
                 console.log('Telegram ответ:', result);
-                return result.ok ? '✅ Telegram отправлен' : '❌ Ошибка Telegram';
+                return result.ok ? '✅ Telegram отправлен' : '❌ Ошибка Telegram: ' + JSON.stringify(result);
             } catch (error) {
                 console.error('Telegram error:', error);
                 return '❌ Ошибка Telegram: ' + error.message;
@@ -481,7 +478,7 @@
         }
 
         // ============================================================
-        //  ОТПРАВКА ЗАЯВКИ
+        //  ОТПРАВКА ЗАЯВКИ (через no-cors)
         // ============================================================
 
         async function submitApplication() {
@@ -510,28 +507,29 @@
             modalSubmitBtn.textContent = 'Отправка...';
 
             try {
-                // 1. Сохраняем в Google таблицу
-                console.log('Отправка в Google таблицу...');
-                const response = await fetch(SCRIPT_URL, {
+                // Отправляем через no-cors (нельзя прочитать ответ, но запрос уходит)
+                const payload = {
+                    action: "apply",
+                    vacancy: currentVacancy,
+                    candidate: { name, phone }
+                };
+
+                console.log('Отправка в Google таблицу (no-cors):', payload);
+
+                await fetch(SCRIPT_URL, {
                     method: "POST",
+                    mode: "no-cors",
                     headers: { 
-                        "Content-Type": "application/json"
+                        "Content-Type": "text/plain;charset=utf-8"
                     },
-                    body: JSON.stringify({
-                        action: "apply",
-                        vacancy: currentVacancy,
-                        candidate: { name, phone }
-                    })
+                    body: JSON.stringify(payload)
                 });
 
-                const result = await response.json();
-                console.log('Ответ от Google:', result);
+                // Так как no-cors не дает прочитать ответ, 
+                // считаем что запрос ушел успешно
+                console.log('Запрос отправлен (no-cors)');
 
-                if (result.status !== 'success') {
-                    throw new Error(result.message || 'Ошибка сохранения');
-                }
-
-                // 2. Отправляем уведомления
+                // Отправляем уведомления
                 const recruiter = recruiters[currentVacancy.city];
                 console.log('Рекрутер для города', currentVacancy.city, ':', recruiter);
                 
@@ -562,7 +560,7 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
 
             } catch (error) {
                 console.error('Ошибка:', error);
-                formError.textContent = 'Ошибка: ' + error.message;
+                formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
                 formError.classList.add('show');
                 modalSubmitBtn.disabled = false;
                 modalSubmitBtn.textContent = 'Откликнуться';
