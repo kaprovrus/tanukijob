@@ -305,9 +305,10 @@
         //  КОНФИГУРАЦИЯ
         // ============================================================
         
+        // URL вашего Google Apps Script
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKKPNl6GIK87QOCnorkuMs0KPfCxrl3y21bg3tTbs25XojvpRTy5xIfmoakKUnyuYR/exec';
         
-        // Токен для Telegram (можно спрятать в скрипте)
+        // Токен для Telegram
         const TELEGRAM_TOKEN = '8896299041:AAFOYA-kyjHGgYtmWVJSNosks3X_rKUh_J8';
         const TELEGRAM_CHAT_ID = '352662960';
 
@@ -340,20 +341,27 @@
 
         async function loadData() {
             try {
+                console.log('Загрузка данных...');
+                
                 const [recruitersRes, vacanciesRes] = await Promise.all([
                     fetch(`${SCRIPT_URL}?type=recruiters`),
                     fetch(`${SCRIPT_URL}?type=vacancies`)
                 ]);
+                
                 const recruitersData = await recruitersRes.json();
                 const vacanciesData = await vacanciesRes.json();
+                
+                console.log('Рекрутеры:', recruitersData);
+                console.log('Вакансии:', vacanciesData);
 
                 if (recruitersData.status === 'success') {
                     recruiters = recruitersData.recruiters.reduce((acc, r) => {
-                        if (r.city && r.phone) {
-                            acc[r.city] = { name: r.name || '', phone: r.phone, email: r.email || '' };
+                        if (r.city) {
+                            acc[r.city] = { name: r.name || '', phone: r.phone || '', email: r.email || '' };
                         }
                         return acc;
                     }, {});
+                    console.log('Обработанные рекрутеры:', recruiters);
                 }
 
                 if (vacanciesData.status === 'success') {
@@ -365,7 +373,7 @@
                     throw new Error('Ошибка загрузки данных');
                 }
             } catch (error) {
-                console.error(error);
+                console.error('Ошибка загрузки:', error);
                 document.getElementById('vacancies-container').innerHTML = 
                     '<div class="error-message">Ошибка загрузки данных. Обновите страницу.</div>';
             }
@@ -437,7 +445,7 @@
             modalSubmitBtn.textContent = 'Откликнуться';
             modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-            candidateName.focus();
+            setTimeout(() => candidateName.focus(), 100);
         }
 
         function closeModal() {
@@ -452,6 +460,7 @@
 
         async function sendTelegramNotification(message) {
             try {
+                console.log('Отправка в Telegram...');
                 const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
                 const response = await fetch(url, {
                     method: 'POST',
@@ -463,41 +472,12 @@
                     })
                 });
                 const result = await response.json();
+                console.log('Telegram ответ:', result);
                 return result.ok ? '✅ Telegram отправлен' : '❌ Ошибка Telegram';
             } catch (error) {
                 console.error('Telegram error:', error);
                 return '❌ Ошибка Telegram: ' + error.message;
             }
-        }
-
-        // ============================================================
-        //  ОТПРАВКА НА ПОЧТУ (через API)
-        // ============================================================
-
-        // Используем EmailJS или другой сервис для отправки почты из браузера
-        // Или просто показываем уведомление
-
-        function sendEmailNotification(recruiterEmail, candidate, vacancy) {
-            // Если есть EmailJS - можно использовать
-            // Или используем mailto: ссылку
-            if (recruiterEmail) {
-                const subject = encodeURIComponent(`Новый отклик: ${vacancy.position}`);
-                const body = encodeURIComponent(`
-                    Новый отклик на вакансию!
-                    
-                    Кандидат: ${candidate.name}
-                    Телефон: ${candidate.phone}
-                    
-                    Вакансия: ${vacancy.position}
-                    Ресторан: ${vacancy.restaurant}
-                    Город: ${vacancy.city}
-                    
-                    Дата: ${new Date().toLocaleString('ru-RU')}
-                `);
-                window.open(`mailto:${recruiterEmail}?subject=${subject}&body=${body}`);
-                return '✅ Открыто письмо для отправки';
-            }
-            return '❌ Email рекрутера не найден';
         }
 
         // ============================================================
@@ -531,10 +511,12 @@
 
             try {
                 // 1. Сохраняем в Google таблицу
+                console.log('Отправка в Google таблицу...');
                 const response = await fetch(SCRIPT_URL, {
                     method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify({
                         action: "apply",
                         vacancy: currentVacancy,
@@ -542,8 +524,16 @@
                     })
                 });
 
+                const result = await response.json();
+                console.log('Ответ от Google:', result);
+
+                if (result.status !== 'success') {
+                    throw new Error(result.message || 'Ошибка сохранения');
+                }
+
                 // 2. Отправляем уведомления
                 const recruiter = recruiters[currentVacancy.city];
+                console.log('Рекрутер для города', currentVacancy.city, ':', recruiter);
                 
                 // Формируем сообщение для Telegram
                 const message = `
@@ -563,12 +553,8 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
                 `.trim();
 
                 // Отправляем в Telegram
-                await sendTelegramNotification(message);
-
-                // Отправляем на почту (открываем mailto)
-                if (recruiter && recruiter.email) {
-                    sendEmailNotification(recruiter.email, { name, phone }, currentVacancy);
-                }
+                const tgResult = await sendTelegramNotification(message);
+                console.log('Telegram результат:', tgResult);
 
                 // Показываем успех
                 formContainer.style.display = 'none';
@@ -576,7 +562,7 @@ ${currentVacancy.description ? '• Описание: ' + currentVacancy.descrip
 
             } catch (error) {
                 console.error('Ошибка:', error);
-                formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
+                formError.textContent = 'Ошибка: ' + error.message;
                 formError.classList.add('show');
                 modalSubmitBtn.disabled = false;
                 modalSubmitBtn.textContent = 'Откликнуться';
