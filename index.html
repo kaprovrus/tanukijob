@@ -645,74 +645,64 @@
         // ============================================================
 
         async function submitApplication() {
-            const name = candidateName.value.trim();
-            const phone = candidatePhone.value.trim();
+    const name = candidateName.value.trim();
+    const phone = candidatePhone.value.trim();
 
-            // Валидация
-            if (!name || !phone) {
-                formError.textContent = 'Пожалуйста, заполните все поля';
-                formError.classList.add('show');
-                return;
-            }
+    if (!name || !phone) {
+        formError.textContent = 'Пожалуйста, заполните все поля';
+        formError.classList.add('show');
+        return;
+    }
 
-            // Простая проверка на минимальную длину ФИО
-            if (name.length < 5) {
-                formError.textContent = 'Введите полное ФИО (минимум 5 символов)';
-                formError.classList.add('show');
-                return;
-            }
+    if (name.length < 5) {
+        formError.textContent = 'Введите полное ФИО (минимум 5 символов)';
+        formError.classList.add('show');
+        return;
+    }
 
-            // Простая проверка телефона (минимальная длина)
-            const phoneDigits = phone.replace(/\D/g, '');
-            if (phoneDigits.length < 10) {
-                formError.textContent = 'Введите корректный номер телефона (минимум 10 цифр)';
-                formError.classList.add('show');
-                return;
-            }
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length < 10) {
+        formError.textContent = 'Введите корректный номер телефона (минимум 10 цифр)';
+        formError.classList.add('show');
+        return;
+    }
 
-            formError.classList.remove('show');
-            modalSubmitBtn.disabled = true;
-            modalSubmitBtn.textContent = 'Отправка...';
+    formError.classList.remove('show');
+    modalSubmitBtn.disabled = true;
+    modalSubmitBtn.textContent = 'Отправка...';
 
-            try {
-                const payload = {
-                    action: "apply",
-                    vacancy: currentVacancy,
-                    candidate: {
-                        name: name,
-                        phone: phone
-                    }
-                };
+    try {
+        const payload = {
+            action: "apply",
+            vacancy: currentVacancy,
+            candidate: { name: name, phone: phone }
+        };
 
-                const response = await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors", // Добавляем для обхода CORS
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                });
+        // Отправляем как text/plain, чтобы обойти жесткие ограничения CORS браузеров
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+        });
 
-                // При no-cors мы не можем прочитать ответ, но запрос уходит.
-                // Показываем успех, так как ошибки обрабатываются на сервере.
-                showSuccess();
+        const result = await response.json();
 
-            } catch (error) {
-                console.error('Ошибка отправки:', error);
-                formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
-                formError.classList.add('show');
-                modalSubmitBtn.disabled = false;
-                modalSubmitBtn.textContent = 'Откликнуться';
-            }
+        if (result.status === 'success') {
+            showSuccess();
+        } else {
+            throw new Error(result.message || 'Ошибка сервера');
         }
 
-        function showSuccess() {
-            formContainer.style.display = 'none';
-            successMessage.classList.add('show');
-            modalSubmitBtn.textContent = 'Откликнуться';
-            modalSubmitBtn.disabled = false;
-        }
-
+    } catch (error) {
+        console.error('Ошибка отправки:', error);
+        formError.textContent = 'Ошибка отправки. Попробуйте ещё раз.';
+        formError.classList.add('show');
+        modalSubmitBtn.disabled = false;
+        modalSubmitBtn.textContent = 'Откликнуться';
+    }
+}
         // ============================================================
         //  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
         // ============================================================
